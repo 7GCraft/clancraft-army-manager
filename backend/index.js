@@ -158,4 +158,6 @@ app.post('/api/replenish-all-units', (req, res) => {
 
   res.send('JSON files updated!');
 });
-app.listen(port, () => {});
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Backend running on port ${port}`);
+});
