@@ -159,7 +159,7 @@ export default {
 
     async replenishAllUnits() {
       try {
-        await axios.post('http://localhost:3000/api/replenish-all-units');
+        await axios.post(process.env.VUE_APP_REPLENISH_ALL_UNITS_URL);
       } catch (err) {
         throw new Error(err);
       }

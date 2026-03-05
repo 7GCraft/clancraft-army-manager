@@ -3,7 +3,7 @@ import { sortObjectKeys } from '@/helper';
 export default {
   async getStateData(context) {
     const response = await axios.get(
-      'http://localhost:3000/api/get-state-list'
+      process.env.VUE_APP_GET_STATE_LIST_URL
     );
     const responseData = response.data;
 
@@ -24,7 +24,7 @@ export default {
     context.commit('setStateMap', newStateMap);
     context.commit('setCurrencyList', newCurrencyList);
 
-    await axios.post('http://localhost:3000/api/add-new-state', {
+    await axios.post(process.env.VUE_APP_ADD_NEW_STATE_URL, {
       armyMap: newStateMap,
       armyData: newStateList,
       currency: newCurrencyList,
@@ -43,7 +43,7 @@ export default {
     context.commit('setStateMap', newStateMap);
     context.commit('setCurrencyList', newCurrencyList);
 
-    await axios.post('http://localhost:3000/api/delete-state', {
+    await axios.post(process.env.VUE_APP_DELETE_STATE_URL, {
       armyMap: payload,
       armyData: payload,
       currency: payload,
