@@ -220,14 +220,7 @@ export default {
     async fetchArmyList() {
       let targetLink;
       console.log(process.env.VUE_APP_DEPLOYMENT_TYPE, 'yahallo');
-      if (process.env.VUE_APP_DEPLOYMENT_TYPE === 'local') {
-        console.log(process.env.NODE_ENV, 'yahallo');
-        targetLink =
-          process.env.VUE_APP_GET_DATA_URL + `?armyName=${this.armyName}`;
-      } else {
-        targetLink =
-          process.env.VUE_APP_GET_DATA_URL + `/${this.armyName}.json`;
-      }
+      targetLink = process.env.VUE_APP_GET_DATA_URL + `?armyName=${this.armyName}`;
 
       let response;
       try {
