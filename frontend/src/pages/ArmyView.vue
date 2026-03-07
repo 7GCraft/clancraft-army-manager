@@ -187,23 +187,14 @@ export default {
       let method;
       let targetLink;
       let reqBody;
-      if (process.env.VUE_APP_DEPLOYMENT_TYPE === 'local') {
-        console.log(process.env.NODE_ENV, 'yahallo');
-        targetLink = process.env.VUE_APP_SAVE_DATA_URL;
-        method = 'post';
-        reqBody = {
-          armyData: armyList,
-          armyName: this.armyName,
-        };
-        console.log('celebrashun');
-      } else {
-        method = 'put';
-        targetLink =
-          process.env.VUE_APP_SAVE_DATA_URL + `/${this.armyName}.json`;
-        reqBody = {
-          ...armyList,
-        };
-      }
+      console.log(process.env.NODE_ENV, 'yahallo');
+      targetLink = process.env.VUE_APP_SAVE_DATA_URL;
+      method = 'post';
+      reqBody = {
+        armyData: armyList,
+        armyName: this.armyName,
+      };
+      console.log('celebrashun');
 
       let response;
       try {
