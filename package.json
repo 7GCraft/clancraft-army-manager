@@ -5,7 +5,10 @@
   "scripts": {
     "serve": "concurrently \" cd frontend && vue-cli-service serve \" \"cd backend && nodemon index.js\"",
     "build": "cd frontend && vue-cli-service build",
-    "serve-prod": "concurrently \"cd frontend && npx serve -s dist \" \"cd backend && node index.js\" "
+    "serve-prod": "concurrently \"cd frontend && npx serve -s dist \" \"cd backend && node index.js\" ",
+    "test": "npm run test:unit -w frontend && npm test -w backend",
+    "test:frontend": "npm run test:unit -w frontend",
+    "test:backend": "npm test -w backend"
   },
   "repository": {
     "type": "git",
