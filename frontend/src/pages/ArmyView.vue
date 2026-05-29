@@ -184,26 +184,12 @@ export default {
       this.showUnitGenerator = false;
     },
     async setArmyList(armyList) {
-      let method;
-      let targetLink;
-      let reqBody;
-      if (process.env.VUE_APP_DEPLOYMENT_TYPE === 'local') {
-        console.log(process.env.NODE_ENV, 'yahallo');
-        targetLink = process.env.VUE_APP_SAVE_DATA_URL;
-        method = 'post';
-        reqBody = {
-          armyData: armyList,
-          armyName: this.armyName,
-        };
-        console.log('celebrashun');
-      } else {
-        method = 'put';
-        targetLink =
-          process.env.VUE_APP_SAVE_DATA_URL + `/${this.armyName}.json`;
-        reqBody = {
-          ...armyList,
-        };
-      }
+      const method = 'post';
+      const targetLink = '/api/save-army-data';
+      const reqBody = {
+        armyData: armyList,
+        armyName: this.armyName,
+      };
 
       let response;
       try {
@@ -218,16 +204,7 @@ export default {
       }
     },
     async fetchArmyList() {
-      let targetLink;
-      console.log(process.env.VUE_APP_DEPLOYMENT_TYPE, 'yahallo');
-      if (process.env.VUE_APP_DEPLOYMENT_TYPE === 'local') {
-        console.log(process.env.NODE_ENV, 'yahallo');
-        targetLink =
-          process.env.VUE_APP_GET_DATA_URL + `?armyName=${this.armyName}`;
-      } else {
-        targetLink =
-          process.env.VUE_APP_GET_DATA_URL + `/${this.armyName}.json`;
-      }
+      const targetLink = `/api/get-army-data?armyName=${this.armyName}`;
 
       let response;
       try {

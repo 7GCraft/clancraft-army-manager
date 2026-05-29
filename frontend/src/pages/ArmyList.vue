@@ -159,7 +159,7 @@ export default {
 
     async replenishAllUnits() {
       try {
-        await axios.post('http://localhost:3000/api/replenish-all-units');
+        await axios.post('/api/replenish-all-units');
       } catch (err) {
         throw new Error(err);
       }

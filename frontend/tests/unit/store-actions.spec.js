@@ -28,7 +28,7 @@ describe('Vuex actions', () => {
 
     await actions.getStateData(context);
 
-    expect(axios.get).toHaveBeenCalledWith('http://localhost:3000/api/get-state-list');
+    expect(axios.get).toHaveBeenCalledWith('/api/get-state-list');
     expect(context.commit).toHaveBeenNthCalledWith(1, 'setStateList', { ST: 'State' });
     expect(context.commit).toHaveBeenNthCalledWith(2, 'setStateMap', { ST: 'state' });
     expect(context.commit).toHaveBeenNthCalledWith(3, 'setCurrencyList', { ST: 'Gold' });
@@ -49,7 +49,7 @@ describe('Vuex actions', () => {
     expect(context.commit).toHaveBeenNthCalledWith(1, 'setStateList', sorted);
     expect(context.commit).toHaveBeenNthCalledWith(2, 'setStateMap', sorted);
     expect(context.commit).toHaveBeenNthCalledWith(3, 'setCurrencyList', sorted);
-    expect(axios.post).toHaveBeenCalledWith('http://localhost:3000/api/add-new-state', {
+    expect(axios.post).toHaveBeenCalledWith('/api/add-new-state', {
       armyData: sorted,
       armyMap: sorted,
       currency: sorted,
@@ -75,7 +75,7 @@ describe('Vuex actions', () => {
     expect(context.commit).toHaveBeenNthCalledWith(1, 'setStateList', { XX: 'Other' });
     expect(context.commit).toHaveBeenNthCalledWith(2, 'setStateMap', { XX: 'other' });
     expect(context.commit).toHaveBeenNthCalledWith(3, 'setCurrencyList', { XX: 'Silver' });
-    expect(axios.post).toHaveBeenCalledWith('http://localhost:3000/api/delete-state', {
+    expect(axios.post).toHaveBeenCalledWith('/api/delete-state', {
       armyData: 'ST',
       armyMap: 'ST',
       currency: 'ST',
