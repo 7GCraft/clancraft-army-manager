@@ -6,6 +6,14 @@ const path = require('path');
 const app = express();
 
 const port = process.env.PORT || 3000;
+const dataPath = path.join(__dirname, 'data');
+const armiesPath = path.join(dataPath, 'armies');
+const referencesPath = path.join(dataPath, 'references');
+const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+
+function ensureArmiesDirectory() {
+  fs.mkdirSync(armiesPath, { recursive: true });
+}
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -20,27 +28,31 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.post('/api/save-army-data', (req, res) => {
+  ensureArmiesDirectory();
+
   const data = req.body.armyData;
   const armyUrl = req.body.armyName;
 
-  fs.writeFile(`./data/armies/${armyUrl}.json`, JSON.stringify(data), err => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('Error saving data');
-    }
+  fs.writeFile(
+    path.join(armiesPath, `${armyUrl}.json`),
+    JSON.stringify(data),
+    err => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error saving data');
+      }
 
-    res.send('Data saved successfully');
-  });
+      res.send('Data saved successfully');
+    }
+  );
 });
 
 app.get('/api/get-army-data', (req, res) => {
-  if (!fs.existsSync('./data/armies')) {
-    fs.mkdirSync('./data/armies');
-  }
+  ensureArmiesDirectory();
 
   const armyUrl = req.query.armyName;
 
-  const filePath = `./data/armies/${armyUrl}.json`;
+  const filePath = path.join(armiesPath, `${armyUrl}.json`);
   if (fs.existsSync(filePath)) {
     // read file
     fs.readFile(filePath, 'utf8', (err, data) => {
@@ -58,9 +70,9 @@ app.get('/api/get-army-data', (req, res) => {
 
 app.get('/api/get-state-list', (req, res) => {
   const filePaths = {
-    armyMap: './data/references/STATE_MAP.json',
-    armyData: './data/references/STATE_ID.json',
-    currency: './data/references/Currency.json',
+    armyMap: path.join(referencesPath, 'STATE_MAP.json'),
+    armyData: path.join(referencesPath, 'STATE_ID.json'),
+    currency: path.join(referencesPath, 'CURRENCY.json'),
   };
 
   const data = {};
@@ -77,9 +89,9 @@ app.get('/api/get-state-list', (req, res) => {
 
 app.post('/api/add-new-state', (req, res) => {
   const filePaths = {
-    armyMap: './data/references/STATE_MAP.json',
-    armyData: './data/references/STATE_ID.json',
-    currency: './data/references/CURRENCY.json',
+    armyMap: path.join(referencesPath, 'STATE_MAP.json'),
+    armyData: path.join(referencesPath, 'STATE_ID.json'),
+    currency: path.join(referencesPath, 'CURRENCY.json'),
   };
   for (const [key, filePath] of Object.entries(filePaths)) {
     if (fs.existsSync(filePath)) {
@@ -95,9 +107,9 @@ app.post('/api/add-new-state', (req, res) => {
 });
 app.post('/api/delete-state', (req, res) => {
   const filePaths = {
-    armyMap: './data/references/STATE_MAP.json',
-    armyData: './data/references/STATE_ID.json',
-    currency: './data/references/CURRENCY.json',
+    armyMap: path.join(referencesPath, 'STATE_MAP.json'),
+    armyData: path.join(referencesPath, 'STATE_ID.json'),
+    currency: path.join(referencesPath, 'CURRENCY.json'),
   };
 
   for (const [key, filePath] of Object.entries(filePaths)) {
@@ -135,14 +147,15 @@ app.post('/api/delete-state', (req, res) => {
 });
 
 app.post('/api/replenish-all-units', (req, res) => {
-  const folderPath = './data/armies/';
-  const files = fs.readdirSync(folderPath); // get list of files in folder
+  ensureArmiesDirectory();
+
+  const files = fs.readdirSync(armiesPath); // get list of files in folder
 
   files.forEach(file => {
     if (file.endsWith('.json')) {
-      const filePath = path.join(folderPath, file);
+      const filePath = path.join(armiesPath, file);
 
-      const jsonData = require(`./${filePath}`);
+      const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
       jsonData.forEach(item => {
         item.Size = helper.replenishUnit(
@@ -158,4 +171,15 @@ app.post('/api/replenish-all-units', (req, res) => {
 
   res.send('JSON files updated!');
 });
-app.listen(port, () => {});
+
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+}
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});

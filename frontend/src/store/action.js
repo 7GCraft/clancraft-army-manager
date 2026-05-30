@@ -2,9 +2,7 @@ import axios from 'axios';
 import { sortObjectKeys } from '@/helper';
 export default {
   async getStateData(context) {
-    const response = await axios.get(
-      'http://localhost:3000/api/get-state-list'
-    );
+    const response = await axios.get('/api/get-state-list');
     const responseData = response.data;
 
     const { armyData, armyMap, currency } = responseData;
@@ -24,7 +22,7 @@ export default {
     context.commit('setStateMap', newStateMap);
     context.commit('setCurrencyList', newCurrencyList);
 
-    await axios.post('http://localhost:3000/api/add-new-state', {
+    await axios.post('/api/add-new-state', {
       armyMap: newStateMap,
       armyData: newStateList,
       currency: newCurrencyList,
@@ -43,7 +41,7 @@ export default {
     context.commit('setStateMap', newStateMap);
     context.commit('setCurrencyList', newCurrencyList);
 
-    await axios.post('http://localhost:3000/api/delete-state', {
+    await axios.post('/api/delete-state', {
       armyMap: payload,
       armyData: payload,
       currency: payload,
