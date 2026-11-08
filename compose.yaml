@@ -1,0 +1,13 @@
+services:
+  army-manager:
+    build: .
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+    ports:
+      - '${BIND_ADDRESS:-127.0.0.1}:${PORT:-3000}:3000'
+    volumes:
+      - army-manager-data:/app/backend/data
+
+volumes:
+  army-manager-data:
